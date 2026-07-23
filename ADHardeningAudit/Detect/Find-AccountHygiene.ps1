@@ -1,4 +1,4 @@
-function Find-AccountHygieneIssues {
+﻿function Find-AccountHygieneIssues {
     <#
     .SYNOPSIS
         Detecte les problemes d'hygiene des comptes Active Directory.
@@ -222,6 +222,6 @@ function Find-AccountHygieneIssues {
 
     #endregion
 
-    Write-Verbose "[Find-AccountHygiene] Total findings hygiene : $($findings.Count)"
+    Write-Verbose "[Find-AccountHygiene] Total findings hygiene : $(@($Findings).Count)"
     return $findings
 }

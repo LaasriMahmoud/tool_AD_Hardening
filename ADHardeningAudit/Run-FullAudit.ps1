@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Point d'entree unique de l'outil ADHardeningAudit.
     Lance l'audit complet du domaine Active Directory et genere le rapport.
@@ -67,24 +67,24 @@ param (
     [switch]$RemediateDemo
 )
 
-# ─── Banniere d'accueil ────────────────────────────────────────────────────────
+# --- Banniere d'accueil --------------------------------------------------------
 
 Clear-Host
 Write-Host @"
 
-  ╔═══════════════════════════════════════════════════════════════════════╗
-  ║                                                                       ║
-  ║        █████╗ ██████╗     ██╗  ██╗ █████╗ ██████╗ ██████╗           ║
-  ║       ██╔══██╗██╔══██╗    ██║  ██║██╔══██╗██╔══██╗██╔══██╗          ║
-  ║       ███████║██║  ██║    ███████║███████║██████╔╝██║  ██║           ║
-  ║       ██╔══██║██║  ██║    ██╔══██║██╔══██║██╔══██╗██║  ██║           ║
-  ║       ██║  ██║██████╔╝    ██║  ██║██║  ██║██║  ██║██████╔╝           ║
-  ║       ╚═╝  ╚═╝╚═════╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝           ║
-  ║                                                                       ║
-  ║         HARDENING AUDIT TOOL v1.0 | mogador.local                    ║
-  ║         Audit & Remediation Active Directory                          ║
-  ║                                                                       ║
-  ╚═══════════════════════════════════════════════════════════════════════╝
+  ========================================================================╗
+  |                                                                       |
+  |        █████╗ ██████╗     ██╗  ██╗ █████╗ ██████╗ ██████╗           |
+  |       ██===██╗██===██╗    ██|  ██|██===██╗██===██╗██===██╗          |
+  |       ███████|██|  ██|    ███████|███████|██████=╝██|  ██|           |
+  |       ██===██|██|  ██|    ██===██|██===██|██===██╗██|  ██|           |
+  |       ██|  ██|██████=╝    ██|  ██|██|  ██|██|  ██|██████=╝           |
+  |       ==╝  ==╝======╝     ==╝  ==╝==╝  ==╝==╝  ==╝======╝           |
+  |                                                                       |
+  |         HARDENING AUDIT TOOL v1.0 | mogador.local                    |
+  |         Audit & Remediation Active Directory                          |
+  |                                                                       |
+  ========================================================================╝
 
 "@ -ForegroundColor Cyan
 
@@ -98,7 +98,7 @@ Write-Host "  Sortie         : " -NoNewline -ForegroundColor Gray
 Write-Host $OutputPath -ForegroundColor White
 Write-Host ""
 
-# ─── Verification des prerequis ───────────────────────────────────────────────
+# --- Verification des prerequis -----------------------------------------------
 
 Write-Host "[ PRE-REQUIS ]" -ForegroundColor Cyan
 
@@ -122,7 +122,7 @@ catch {
     exit 1
 }
 
-# ─── Chargement du module ─────────────────────────────────────────────────────
+# --- Chargement du module -----------------------------------------------------
 
 Write-Host ""
 Write-Host "[ MODULE ]" -ForegroundColor Cyan
@@ -148,7 +148,7 @@ catch {
     exit 1
 }
 
-# ─── Lancement de l'audit ─────────────────────────────────────────────────────
+# --- Lancement de l'audit -----------------------------------------------------
 
 Write-Host ""
 Write-Host "[ AUDIT ]" -ForegroundColor Cyan
@@ -156,13 +156,13 @@ Write-Host ""
 
 $allFindings = Invoke-ADHardeningAudit -Domain $Domain -OutputPath $OutputPath
 
-# ─── Demo des remediations (WhatIf) ───────────────────────────────────────────
+# --- Demo des remediations (WhatIf) -------------------------------------------
 
 if ($RemediateDemo) {
     Write-Host ""
-    Write-Host "═══════════════════════════════════════════════════════════════" -ForegroundColor Magenta
+    Write-Host "===============================================================" -ForegroundColor Magenta
     Write-Host "  DEMO REMEDIATION - MODE WHATIF (aucune modification reelle)  " -ForegroundColor Magenta
-    Write-Host "═══════════════════════════════════════════════════════════════" -ForegroundColor Magenta
+    Write-Host "===============================================================" -ForegroundColor Magenta
     Write-Host ""
 
     # Demo 1 : Delegation
@@ -211,18 +211,18 @@ if ($RemediateDemo) {
     Write-Host "  Aucune modification n a ete apportee au domaine [$Domain]." -ForegroundColor Magenta
 }
 
-# ─── Recap final ──────────────────────────────────────────────────────────────
+# --- Recap final --------------------------------------------------------------
 
 Write-Host ""
-Write-Host "═══════════════════════════════════════════════════════════════" -ForegroundColor Cyan
+Write-Host "===============================================================" -ForegroundColor Cyan
 Write-Host "                     AUDIT TERMINE                             " -ForegroundColor Cyan
-Write-Host "═══════════════════════════════════════════════════════════════" -ForegroundColor Cyan
+Write-Host "===============================================================" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "  Le rapport HTML a ete ouvert dans votre navigateur." -ForegroundColor Green
 Write-Host "  Les fichiers sont disponibles dans : $OutputPath" -ForegroundColor Green
 Write-Host ""
 Write-Host "  Commandes utiles pour la soutenance :" -ForegroundColor Yellow
-Write-Host "  ─────────────────────────────────────" -ForegroundColor Gray
+Write-Host "  -------------------------------------" -ForegroundColor Gray
 Write-Host "  # Audit seul :" -ForegroundColor Gray
 Write-Host "  .\Run-FullAudit.ps1 -Domain $Domain" -ForegroundColor White
 Write-Host ""

@@ -1,4 +1,4 @@
-function Repair-EscalationPaths {
+﻿function Repair-EscalationPaths {
     <#
     .SYNOPSIS
         Remediation des chemins d'escalade de privileges (nesting, AdminCount orphelins).
@@ -62,9 +62,9 @@ function Repair-EscalationPaths {
     )
 
     Write-Host ""
-    Write-Host "═══════════════════════════════════════════════════════" -ForegroundColor Cyan
+    Write-Host "=======================================================" -ForegroundColor Cyan
     Write-Host "  REMEDIATION - Escalation Path - Type : $Type         " -ForegroundColor Cyan
-    Write-Host "═══════════════════════════════════════════════════════" -ForegroundColor Cyan
+    Write-Host "=======================================================" -ForegroundColor Cyan
     Write-Host ""
 
     switch ($Type) {
@@ -98,7 +98,7 @@ function Repair-EscalationPaths {
 
             # Afficher l'impact complet
             Write-Host "  ANALYSE D'IMPACT" -ForegroundColor Yellow
-            Write-Host "  ─────────────────────────────────────────────────────" -ForegroundColor Gray
+            Write-Host "  -----------------------------------------------------" -ForegroundColor Gray
             Write-Host "  Groupe a retirer  : $NestedGroupName" -ForegroundColor White
             Write-Host "  Groupe parent     : $ParentGroupName" -ForegroundColor White
             Write-Host ""

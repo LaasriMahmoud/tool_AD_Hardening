@@ -1,4 +1,4 @@
-function New-AuditReport {
+﻿function New-AuditReport {
     <#
     .SYNOPSIS
         Genere un rapport HTML style PingCastle et un CSV des findings AD.
@@ -47,11 +47,11 @@ function New-AuditReport {
     $auditDate   = Get-Date -Format 'dd/MM/yyyy HH:mm:ss'
 
     # Calcul des metriques globales
-    $total    = $Findings.Count
-    $critique = ($Findings | Where-Object Severity -eq 'Critique').Count
-    $eleve    = ($Findings | Where-Object Severity -eq 'Eleve').Count
-    $moyen    = ($Findings | Where-Object Severity -eq 'Moyen').Count
-    $faible   = ($Findings | Where-Object Severity -eq 'Faible').Count
+    $total    = @($Findings).Count
+    $critique = @($Findings | Where-Object Severity -eq 'Critique').Count
+    $eleve    = @($Findings | Where-Object Severity -eq 'Eleve').Count
+    $moyen    = @($Findings | Where-Object Severity -eq 'Moyen').Count
+    $faible   = @($Findings | Where-Object Severity -eq 'Faible').Count
 
     # Score global style PingCastle (0 = parfait, 100 = critique)
     $score = [Math]::Min(100, ($critique * 25) + ($eleve * 10) + ($moyen * 3) + ($faible * 1))
@@ -295,9 +295,9 @@ function New-AuditReport {
 <details>
   <summary>Details &amp; chemin d'attaque</summary>
   <div class='detail-box'>
-    <strong>Description :</strong><br/>$([System.Web.HttpUtility]::HtmlEncode($Finding.Description))<br/><br/>
-    <div class='attack-path'>⚔ ATTACK PATH : $([System.Web.HttpUtility]::HtmlEncode($Finding.AttackPath))</div>
-    <div class='reco-box'>✅ REMEDIATION : $([System.Web.HttpUtility]::HtmlEncode($Finding.Recommendation))</div>
+    <strong>Description :</strong><br/>$([System.Net.WebUtility]::HtmlEncode($Finding.Description))<br/><br/>
+    <div class='attack-path'>[!] ATTACK PATH : $([System.Net.WebUtility]::HtmlEncode($Finding.AttackPath))</div>
+    <div class='reco-box'>[OK] REMEDIATION : $([System.Net.WebUtility]::HtmlEncode($Finding.Recommendation))</div>
   </div>
 </details>
 "@
@@ -320,10 +320,10 @@ function New-AuditReport {
     #region --- Construire le corps HTML par categorie ---
 
     $categoriesConfig = @(
-        @{ Key = 'Delegation';     Title = '🔑 Delegation Kerberos'; Color = '#e74c3c' }
-        @{ Key = 'AccountHygiene'; Title = '🧹 Hygiene des comptes';  Color = '#e67e22' }
-        @{ Key = 'EscalationPath'; Title = '⬆ Chemins d escalade';   Color = '#f39c12' }
-        @{ Key = 'ACLAbuse';       Title = '🛡 Abus d ACL (Explain Only)'; Color = '#a855f7' }
+        @{ Key = 'Delegation';     Title = '[KEY] Delegation Kerberos'; Color = '#e74c3c' }
+        @{ Key = 'AccountHygiene'; Title = '[CLN] Hygiene des comptes';  Color = '#e67e22' }
+        @{ Key = 'EscalationPath'; Title = '[UP] Chemins d escalade';   Color = '#f39c12' }
+        @{ Key = 'ACLAbuse';       Title = '[SEC] Abus d ACL (Explain Only)'; Color = '#a855f7' }
     )
 
     $tableHeaders = @"
@@ -345,7 +345,7 @@ function New-AuditReport {
         $count       = if ($catFindings) { @($catFindings).Count } else { 0 }
 
         $aclBanner = if ($catConf.Key -eq 'ACLAbuse') {
-            "<div class='explain-banner'>⚠️ <strong>EXPLAIN ONLY</strong> — Ce module ne propose pas de remediation automatique. Chaque ACE doit etre validee manuellement par un humain pour distinguer delegation legitime et backdoor.</div>"
+            "<div class='explain-banner'>[WARN] <strong>EXPLAIN ONLY</strong> — Ce module ne propose pas de remediation automatique. Chaque ACE doit etre validee manuellement par un humain pour distinguer delegation legitime et backdoor.</div>"
         } else { '' }
 
         $rows = ''
@@ -355,7 +355,7 @@ function New-AuditReport {
             }
         }
         else {
-            $rows = "<tr><td colspan='7' style='text-align:center;color:#27ae60;padding:20px'>✅ Aucun finding detecte dans cette categorie</td></tr>"
+            $rows = "<tr><td colspan='7' style='text-align:center;color:#27ae60;padding:20px'>[OK] Aucun finding detecte dans cette categorie</td></tr>"
         }
 
         $bodySections += @"
@@ -373,7 +373,7 @@ $aclBanner
     #region --- Tableau de validation (findings connus) ---
 
     $validationTable = @"
-<div class='section-title' style='border-color:#58a6ff'>📋 Tableau de Validation — Comparaison avec BloodHound / PingCastle</div>
+<div class='section-title' style='border-color:#58a6ff'>[VAL] Tableau de Validation — Comparaison avec BloodHound / PingCastle</div>
 <table>
   <thead>
     <tr>
@@ -387,43 +387,43 @@ $aclBanner
   <tbody>
     <tr>
       <td>svc-plurihotel Kerberoastable</td>
-      <td class='val-ok'>$(if (($Findings | Where-Object { $_.Object -like '*plurihotel*' -and $_.FindingName -like '*Kerberoast*' }).Count -gt 0) { '✅ Detecte' } else { '<span class="val-warn">⚠️ Non trouve (verifier SPN)</span>' })</td>
-      <td class='val-ok'>✅</td>
+      <td class='val-ok'>$(if (($Findings | Where-Object { $_.Object -like '*plurihotel*' -and $_.FindingName -like '*Kerberoast*' }).Count -gt 0) { '[OK] Detecte' } else { '<span class="val-warn">[WARN] Non trouve (verifier SPN)</span>' })</td>
+      <td class='val-ok'>[OK]</td>
       <td><code>Find-AccountHygiene</code></td>
       <td>Haute</td>
     </tr>
     <tr>
       <td>svc-plurihotel Unconstrained Delegation</td>
-      <td class='val-ok'>$(if (($Findings | Where-Object { $_.Object -like '*plurihotel*' -and $_.Category -eq 'Delegation' }).Count -gt 0) { '✅ Detecte' } else { '<span class="val-warn">⚠️ Non trouve (verifier TrustedForDelegation)</span>' })</td>
-      <td class='val-ok'>✅</td>
+      <td class='val-ok'>$(if (($Findings | Where-Object { $_.Object -like '*plurihotel*' -and $_.Category -eq 'Delegation' }).Count -gt 0) { '[OK] Detecte' } else { '<span class="val-warn">[WARN] Non trouve (verifier TrustedForDelegation)</span>' })</td>
+      <td class='val-ok'>[OK]</td>
       <td><code>Find-Delegation</code></td>
       <td>Haute</td>
     </tr>
     <tr>
       <td>Nesting IT-Support → Domain Admins</td>
-      <td class='val-ok'>$(if (($Findings | Where-Object { $_.FindingName -like '*IT-Support*' }).Count -gt 0) { '✅ Detecte' } else { '<span class="val-warn">⚠️ Non trouve (verifier nesting)</span>' })</td>
-      <td class='val-ok'>✅</td>
+      <td class='val-ok'>$(if (($Findings | Where-Object { $_.FindingName -like '*IT-Support*' }).Count -gt 0) { '[OK] Detecte' } else { '<span class="val-warn">[WARN] Non trouve (verifier nesting)</span>' })</td>
+      <td class='val-ok'>[OK]</td>
       <td><code>Find-EscalationPath</code></td>
       <td>Haute</td>
     </tr>
     <tr>
       <td>Delegation liee a LAPS mal configuree</td>
-      <td class='val-ok'>$(if (($Findings | Where-Object { $_.FindingName -like '*LAPS*' }).Count -gt 0) { '✅ Detecte' } else { '<span class="val-warn">⚠️ Partiel (LAPS correctement configure)</span>' })</td>
-      <td class='val-warn'>⚠️ Partiel</td>
+      <td class='val-ok'>$(if (($Findings | Where-Object { $_.FindingName -like '*LAPS*' }).Count -gt 0) { '[OK] Detecte' } else { '<span class="val-warn">[WARN] Partiel (LAPS correctement configure)</span>' })</td>
+      <td class='val-warn'>[WARN] Partiel</td>
       <td><code>Find-Delegation</code></td>
       <td>Moyenne</td>
     </tr>
     <tr>
       <td>Comptes AdminCount=1 orphelins</td>
-      <td class='val-ok'>$(if (($Findings | Where-Object { $_.FindingName -like '*AdminCount*' }).Count -gt 0) { '✅ Detecte' } else { '✅ Aucun orphelin (bon signe)' })</td>
-      <td class='val-warn'>⚠️ Non disponible</td>
+      <td class='val-ok'>$(if (($Findings | Where-Object { $_.FindingName -like '*AdminCount*' }).Count -gt 0) { '[OK] Detecte' } else { '[OK] Aucun orphelin (bon signe)' })</td>
+      <td class='val-warn'>[WARN] Non disponible</td>
       <td><code>Find-EscalationPath</code></td>
       <td>Haute</td>
     </tr>
     <tr>
       <td>Comptes AS-REP Roastable</td>
-      <td class='val-ok'>$(if (($Findings | Where-Object { $_.FindingName -like '*AS-REP*' }).Count -gt 0) { "✅ $( ($Findings | Where-Object { $_.FindingName -like '*AS-REP*' }).Count ) compte(s)" } else { '✅ Aucun (bon signe)' })</td>
-      <td class='val-ok'>✅</td>
+      <td class='val-ok'>$(if (($Findings | Where-Object { $_.FindingName -like '*AS-REP*' }).Count -gt 0) { "[OK] $( ($Findings | Where-Object { $_.FindingName -like '*AS-REP*' }).Count ) compte(s)" } else { '[OK] Aucun (bon signe)' })</td>
+      <td class='val-ok'>[OK]</td>
       <td><code>Find-AccountHygiene</code></td>
       <td>Haute</td>
     </tr>
@@ -449,9 +449,9 @@ $aclBanner
 
 <!-- EN-TETE -->
 <div class='header'>
-  <h1>🔒 AD Hardening Audit Report</h1>
+  <h1>[LOCK] AD Hardening Audit Report</h1>
   <div class='subtitle'>Rapport d audit de securite Active Directory</div>
-  <div class='domain-badge'>🌐 $Domain</div>
+  <div class='domain-badge'>[WEB] $Domain</div>
   <div class='subtitle' style='margin-top:8px'>Genere le $auditDate | ADHardeningAudit v1.0</div>
 </div>
 
@@ -494,7 +494,7 @@ $bodySections
 $validationTable
 
 <!-- JUSTIFICATION ACL EXPLAIN-ONLY -->
-<div class='section-title' style='border-color:#a855f7'>📖 Justification : Pourquoi ACL = Explain Only</div>
+<div class='section-title' style='border-color:#a855f7'>[DOC] Justification : Pourquoi ACL = Explain Only</div>
 <div style='background:#161b22;border:1px solid #30363d;border-radius:8px;padding:20px;margin-bottom:30px;'>
 <p style='margin-bottom:12px'>Une ACE <code>GenericAll</code> ou <code>WriteDacl</code> sur un objet peut etre :</p>
 <ul style='margin-left:20px;line-height:2'>

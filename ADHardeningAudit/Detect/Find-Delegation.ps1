@@ -1,4 +1,4 @@
-function Find-DangerousDelegation {
+﻿function Find-DangerousDelegation {
     <#
     .SYNOPSIS
         Detecte les configurations de delegation Kerberos dangereuses.
@@ -217,6 +217,6 @@ function Find-DangerousDelegation {
 
     #endregion
 
-    Write-Verbose "[Find-Delegation] Total findings delegation : $($findings.Count)"
+    Write-Verbose "[Find-Delegation] Total findings delegation : $(@($Findings).Count)"
     return $findings
 }

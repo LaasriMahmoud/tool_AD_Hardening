@@ -1,4 +1,4 @@
-function Find-PrivilegeEscalationPaths {
+﻿function Find-PrivilegeEscalationPaths {
     <#
     .SYNOPSIS
         Detecte les chemins d'escalade de privileges dans l'AD.
@@ -228,6 +228,6 @@ function Find-PrivilegeEscalationPaths {
 
     #endregion
 
-    Write-Verbose "[Find-EscalationPath] Total findings escalation : $($findings.Count)"
+    Write-Verbose "[Find-EscalationPath] Total findings escalation : $(@($Findings).Count)"
     return $findings
 }

@@ -1,4 +1,4 @@
-function Repair-AccountHygieneIssues {
+﻿function Repair-AccountHygieneIssues {
     <#
     .SYNOPSIS
         Remediation des problemes d'hygiene des comptes AD.
@@ -55,9 +55,9 @@ function Repair-AccountHygieneIssues {
     )
 
     Write-Host ""
-    Write-Host "═══════════════════════════════════════════════════════" -ForegroundColor Cyan
+    Write-Host "=======================================================" -ForegroundColor Cyan
     Write-Host "  REMEDIATION - Account Hygiene - Type : $Type         " -ForegroundColor Cyan
-    Write-Host "═══════════════════════════════════════════════════════" -ForegroundColor Cyan
+    Write-Host "=======================================================" -ForegroundColor Cyan
     Write-Host ""
 
     switch ($Type) {

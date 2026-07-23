@@ -1,4 +1,4 @@
-function Repair-DangerousDelegation {
+﻿function Repair-DangerousDelegation {
     <#
     .SYNOPSIS
         Remediation des delegations Kerberos dangereuses.
@@ -86,9 +86,9 @@ function Repair-DangerousDelegation {
     }
 
     Write-Host ""
-    Write-Host "═══════════════════════════════════════════════════════" -ForegroundColor Cyan
+    Write-Host "=======================================================" -ForegroundColor Cyan
     Write-Host "  REMEDIATION - Delegation - $ObjectName ($ObjectType)  " -ForegroundColor Cyan
-    Write-Host "═══════════════════════════════════════════════════════" -ForegroundColor Cyan
+    Write-Host "=======================================================" -ForegroundColor Cyan
     Write-Host "  DN : $($adObject.DistinguishedName)" -ForegroundColor Gray
     Write-Host "  TrustedForDelegation        : $($adObject.TrustedForDelegation)" -ForegroundColor $(if ($adObject.TrustedForDelegation) {'Red'} else {'Green'})
     Write-Host "  TrustedToAuthForDelegation  : $($adObject.TrustedToAuthForDelegation)" -ForegroundColor $(if ($adObject.TrustedToAuthForDelegation) {'Red'} else {'Green'})

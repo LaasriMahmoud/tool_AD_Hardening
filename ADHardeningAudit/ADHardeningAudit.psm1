@@ -1,4 +1,4 @@
-#Requires -Version 5.1
+﻿#Requires -Version 5.1
 #Requires -Modules ActiveDirectory
 
 <#
@@ -83,11 +83,11 @@ function Invoke-ADHardeningAudit {
     $allFindings = [System.Collections.Generic.List[PSCustomObject]]::new()
 
     Write-Host "`n" -NoNewline
-    Write-Host "╔══════════════════════════════════════════════════════════════════╗" -ForegroundColor Cyan
-    Write-Host "║          ADHardeningAudit v1.0 - Audit Active Directory          ║" -ForegroundColor Cyan
-    Write-Host "║                    Domaine : $Domain$((' ' * [Math]::Max(0, 34 - $Domain.Length)))║" -ForegroundColor Cyan
-    Write-Host "║                    Date    : $(Get-Date -Format 'yyyy-MM-dd HH:mm')                   ║" -ForegroundColor Cyan
-    Write-Host "╚══════════════════════════════════════════════════════════════════╝" -ForegroundColor Cyan
+    Write-Host "===================================================================╗" -ForegroundColor Cyan
+    Write-Host "|          ADHardeningAudit v1.0 - Audit Active Directory          |" -ForegroundColor Cyan
+    Write-Host "|                    Domaine : $Domain$((' ' * [Math]::Max(0, 34 - $Domain.Length)))|" -ForegroundColor Cyan
+    Write-Host "|                    Date    : $(Get-Date -Format 'yyyy-MM-dd HH:mm')                   |" -ForegroundColor Cyan
+    Write-Host "===================================================================╝" -ForegroundColor Cyan
     Write-Host ""
 
     #region Detection
@@ -140,21 +140,21 @@ function Invoke-ADHardeningAudit {
 
     #region Resume console
 
-    $critical = ($allFindings | Where-Object Severity -eq 'Critique').Count
-    $high      = ($allFindings | Where-Object Severity -eq 'Eleve').Count
-    $medium    = ($allFindings | Where-Object Severity -eq 'Moyen').Count
-    $low       = ($allFindings | Where-Object Severity -eq 'Faible').Count
+    $critical = @($allFindings | Where-Object Severity -eq 'Critique').Count
+    $high      = @($allFindings | Where-Object Severity -eq 'Eleve').Count
+    $medium    = @($allFindings | Where-Object Severity -eq 'Moyen').Count
+    $low       = @($allFindings | Where-Object Severity -eq 'Faible').Count
 
     Write-Host ""
-    Write-Host "┌─────────────────────────────────────────┐" -ForegroundColor Cyan
-    Write-Host "│            RESUME DE L'AUDIT             │" -ForegroundColor Cyan
-    Write-Host "├─────────────────────────────────────────┤" -ForegroundColor Cyan
-    Write-Host "│  Total findings  : $($allFindings.Count.ToString().PadRight(20))│" -ForegroundColor White
-    Write-Host "│  🔴 Critique     : $($critical.ToString().PadRight(20))│" -ForegroundColor Red
-    Write-Host "│  🟠 Eleve        : $($high.ToString().PadRight(20))│" -ForegroundColor DarkYellow
-    Write-Host "│  🟡 Moyen        : $($medium.ToString().PadRight(20))│" -ForegroundColor Yellow
-    Write-Host "│  🟢 Faible       : $($low.ToString().PadRight(20))│" -ForegroundColor Green
-    Write-Host "└─────────────────────────────────────────┘" -ForegroundColor Cyan
+    Write-Host "------------------------------------------┐" -ForegroundColor Cyan
+    Write-Host "|            RESUME DE L'AUDIT             |" -ForegroundColor Cyan
+    Write-Host "-------------------------------------------" -ForegroundColor Cyan
+    Write-Host "|  Total findings  : $($allFindings.Count.ToString().PadRight(20))|" -ForegroundColor White
+    Write-Host "|  [Critique] Critique     : $($critical.ToString().PadRight(20))|" -ForegroundColor Red
+    Write-Host "|  [Eleve] Eleve        : $($high.ToString().PadRight(20))|" -ForegroundColor DarkYellow
+    Write-Host "|  [Moyen] Moyen        : $($medium.ToString().PadRight(20))|" -ForegroundColor Yellow
+    Write-Host "|  [Faible] Faible       : $($low.ToString().PadRight(20))|" -ForegroundColor Green
+    Write-Host "------------------------------------------┘" -ForegroundColor Cyan
     Write-Host ""
 
     #endregion

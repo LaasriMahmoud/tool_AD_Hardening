@@ -1,4 +1,4 @@
-function Find-ACLAbuses {
+﻿function Find-ACLAbuses {
     <#
     .SYNOPSIS
         Detecte les abus d'ACL sur les objets AD sensibles — MODE EXPLAIN ONLY.
@@ -283,7 +283,7 @@ function Find-ACLAbuses {
 
     #endregion
 
-    Write-Verbose "[Find-ACLAbuse] Total findings ACL : $($findings.Count)"
+    Write-Verbose "[Find-ACLAbuse] Total findings ACL : $(@($Findings).Count)"
     Write-Verbose "[Find-ACLAbuse] RAPPEL : Ce module est EXPLAIN-ONLY. Aucune remediation automatique."
     return $findings
 }
