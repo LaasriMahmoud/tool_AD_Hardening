@@ -33,7 +33,7 @@ function New-AuditReport {
         [string]$Domain = $env:USERDNSDOMAIN,
 
         [Parameter(Mandatory = $false)]
-        [string]$OutputPath = '.\AuditResults'
+        [string]$OutputPath = "$PSScriptRoot\AuditResults"
     )
 
     # Creer le dossier de sortie

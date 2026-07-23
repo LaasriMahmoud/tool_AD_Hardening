@@ -61,7 +61,7 @@ param (
     [string]$Domain = $env:USERDNSDOMAIN,
 
     [Parameter(Mandatory = $false)]
-    [string]$OutputPath = '.\AuditResults',
+    [string]$OutputPath = "$PSScriptRoot\AuditResults",
 
     [Parameter(Mandatory = $false)]
     [switch]$RemediateDemo
@@ -127,7 +127,7 @@ catch {
 Write-Host ""
 Write-Host "[ MODULE ]" -ForegroundColor Cyan
 
-$modulePath = Join-Path $PSScriptRoot 'ADHardeningAudit\ADHardeningAudit.psd1'
+$modulePath = Join-Path $PSScriptRoot 'ADHardeningAudit.psd1'
 
 if (-not (Test-Path $modulePath)) {
     Write-Host "  [!] Module introuvable : $modulePath" -ForegroundColor Red

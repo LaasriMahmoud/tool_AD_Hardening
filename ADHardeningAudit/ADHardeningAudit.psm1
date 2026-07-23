@@ -73,7 +73,7 @@ function Invoke-ADHardeningAudit {
         [string]$Domain = $env:USERDNSDOMAIN,
 
         [Parameter(Mandatory = $false)]
-        [string]$OutputPath = '.\AuditResults',
+        [string]$OutputPath = "$PSScriptRoot\AuditResults",
 
         [Parameter(Mandatory = $false)]
         [switch]$SkipRemediation
